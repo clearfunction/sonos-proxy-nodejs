@@ -1,0 +1,15 @@
+node_modules
+presets.json
+presets/
+cache
+settings.json
+static/tts
+.idea
+.ntvs_analysis.dat
+obj/
+*.njsproj
+*.sln
+*.pem
+*.crt
+*.pfx
+*.key
