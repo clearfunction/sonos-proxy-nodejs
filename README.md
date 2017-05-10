@@ -12,6 +12,6 @@ We set this up with [`pm2`](http://pm2.keymetrics.io/docs/usage/quick-start/#set
 ```sh
 yarn                   # installs this app
 npm install -g pm2     # installs the daemonizer
-pm2 start ./server.js  # assumes you're in this app's folder, starts the daemon
+pm2 start ./server.js --name sonos_proxy  # assumes you're in this app's folder, starts the daemon
 pm2 save               # saves the running process as a daemon that will be auto-restarted even after reboots
 ```
