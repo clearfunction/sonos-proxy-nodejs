@@ -9,7 +9,8 @@ var request = require("request");
 
 // connect to socket for bot commands
 // the basic idea is that we just proxy commands to the referenced HTTP API
-var playerFound = function(player) {
+
+var registerListener = function() {
   var serviceUrl = settings.clearbotUrl;
 
   var socket = require("socket.io-client")(serviceUrl);
@@ -20,25 +21,26 @@ var playerFound = function(player) {
 
   socket.on("play_url", function(data) {
     console.log("Received play_url: ", data);
-    console.log(
-      `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/${encodeURIComponent(
-        player.roomName
-      )}/clip/${encodeURIComponent(data.url)}/${data.volume}`
-    );
-    request(
-      `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/${encodeURIComponent(
-        player.roomName
-      )}/clip/${encodeURIComponent(data.url)}/${data.volume}`
-    );
+    for (var index = 0; index < discovery.players.length; index++) {
+      var player = discovery.players[index];
+      request(
+        `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/${encodeURIComponent(
+          player.roomName
+        )}/clip/${encodeURIComponent(data.url)}/${data.volume}`
+      );
+    }
   });
 
   socket.on("play_text", function(data) {
     console.log("Received say: ", data);
-    request(
-      `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/${encodeURIComponent(
-        player.roomName
-      )}/say/${encodeURIComponent(data.text)}/${data.volume}`
-    );
+    for (var index = 0; index < discovery.players.length; index++) {
+      var player = discovery.players[index];
+      request(
+        `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/${encodeURIComponent(
+          player.roomName
+        )}/say/${encodeURIComponent(data.text)}/${data.volume}`
+      );
+    }
   });
 
   socket.on("close", function() {
@@ -48,20 +50,8 @@ var playerFound = function(player) {
   });
 };
 
-// find the speaker
-var findPlayers = function() {
-  var players = discovery.players;
-  if (players.length > 0) {
-    for (var index = 0; index < players.length; index++) {
-      var element = players[index];
-      playerFound(players[index]);
-    }
-  } else {
-    setTimeout(findPlayers, 2000);
-  }
-};
-
 // start up the http api server
 require("node-sonos-http-api/server");
 console.log(`Looking for Sonos speakers`);
-findPlayers();
+
+registerListener();
