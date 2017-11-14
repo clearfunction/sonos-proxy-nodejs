@@ -8,7 +8,7 @@
   "author": "Jesse Brown <jabrown85@gmail.com>",
   "main": "server.js",
   "dependencies": {
-    "socket.io-client": "^1.7.3",    
-    "node-sonos-http-api": "https://github.com/jabrown85/node-sonos-http-api"
+    "socket.io-client": "^1.7.3",
+    "sonos-http-api": "https://github.com/jabrown85/node-sonos-http-api"
   }
 }

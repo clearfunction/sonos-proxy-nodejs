@@ -1,8 +1,8 @@
 "use strict";
-const singlePlayerAnnouncement = require("node-sonos-http-api/lib/helpers/single-player-announcement");
-const tryDownloadTTS = require("node-sonos-http-api/lib/helpers/try-download-tts");
+const singlePlayerAnnouncement = require("sonos-http-api/lib/helpers/single-player-announcement");
+const tryDownloadTTS = require("sonos-http-api/lib/helpers/try-download-tts");
 const settings = require("./settings");
-const sonosHttpSettings = require("node-sonos-http-api/settings");
+const sonosHttpSettings = require("sonos-http-api/settings");
 const SonosSystem = require("sonos-discovery");
 const discovery = new SonosSystem(sonosHttpSettings);
 var request = require("request");
@@ -20,27 +20,20 @@ var registerListener = function() {
   });
 
   socket.on("play_url", function(data) {
-    console.log("Received play_url: ", data);
-    for (var index = 0; index < discovery.players.length; index++) {
-      var player = discovery.players[index];
-      request(
-        `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/${encodeURIComponent(
-          player.roomName
-        )}/clip/${encodeURIComponent(data.url)}/${data.volume}`
-      );
-    }
+    request(
+      `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/clipall/${encodeURIComponent(
+        data.url
+      )}/${data.volume}`
+    );
   });
 
   socket.on("play_text", function(data) {
     console.log("Received say: ", data);
-    for (var index = 0; index < discovery.players.length; index++) {
-      var player = discovery.players[index];
-      request(
-        `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/${encodeURIComponent(
-          player.roomName
-        )}/say/${encodeURIComponent(data.text)}/${data.volume}`
-      );
-    }
+    request(
+      `http://${discovery.localEndpoint}:${sonosHttpSettings.port}/sayall/${encodeURIComponent(
+        data.text
+      )}/${data.volume}`
+    );
   });
 
   socket.on("close", function() {
@@ -51,7 +44,7 @@ var registerListener = function() {
 };
 
 // start up the http api server
-require("node-sonos-http-api/server");
+require("sonos-http-api/server");
 console.log(`Looking for Sonos speakers`);
 
 registerListener();
