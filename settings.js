@@ -1,3 +1,3 @@
 module.exports = {
-  clearbotUrl: "http://clearbot.herokuapp.com/"
+  clearbotUrl: "http://clearbot.clearfunction.com/"
 };
