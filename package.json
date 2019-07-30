@@ -1,14 +1,20 @@
 {
   "name": "sonos_proxy_node",
-  "version": "1.0.0",
-  "description": "A socket client for https://github.com/clearfunction/clearbot sonos integration",
+  "version": "1.1.0",
+  "description": "A socket client for https://github.com/clearfunction/clearbot Sonos integration",
   "scripts": {
-    "start": "node server.js"
+    "start": "yarn start server.js"
   },
-  "author": "Jesse Brown <jabrown85@gmail.com>",
+  "author": "David Mohundro <david@clearfunction.com>",
   "main": "server.js",
   "dependencies": {
-    "socket.io-client": "^1.7.3",
-    "sonos-http-api": "https://github.com/jabrown85/node-sonos-http-api"
+    "request": "^2.88.0",
+    "socket.io-client": "^2.2.0",
+    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2"
   }
 }
