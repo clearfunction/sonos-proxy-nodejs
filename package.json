@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "A socket client for https://github.com/clearfunction/clearbot Sonos integration",
   "scripts": {
-    "start": "yarn start server.js"
+    "start": "node server.js"
   },
   "author": "David Mohundro <david@clearfunction.com>",
   "main": "server.js",

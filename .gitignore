@@ -13,3 +13,4 @@ obj/
 *.crt
 *.pfx
 *.key
+*.swp
