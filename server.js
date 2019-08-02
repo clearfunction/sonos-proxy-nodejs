@@ -13,11 +13,15 @@ function urlForRoom(roomName) {
 }
 
 function playClip(roomName, data) {
-  request(`${urlForRoom(roomName)}/clip/${data.file}/${data.volume}`);
+  const file = encodeURIComponent(data.file);
+  const volume = encodeURIComponent(data.volume);
+  request(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
 }
 
 function sayClip(roomName, data) {
-  request(`${urlForRoom(roomName)}/say/${data.text}/${data.volume}`);
+  const text = encodeURIComponent(data.text);
+  const volume = encodeURIComponent(data.volume);
+  request(`${urlForRoom(roomName)}/say/${text}/${volume}`);
 }
 
 function enumeratePlayers(callback) {
