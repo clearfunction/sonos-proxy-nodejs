@@ -733,11 +733,6 @@ hosted-git-info@^2.1.4:
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
   integrity sha512-7T/BxH19zbcCTa8XkMlbK5lTo1WtgkFi3GvdWEyNuc4Vex7/9Dqbnpsf4JMydcfj9HCg4zUWFTL3Za6lapg5/w==
 
-html-entities@1.0.x:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.0.10.tgz#0dea59130dd50df154e82c4cf71d08c2c9dc968b"
-  integrity sha1-DepZEw3VDfFU6CxM9x0Iwsnclos=
-
 http-signature@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/http-signature/-/http-signature-1.2.0.tgz#9aecd925114772f3d95b65a60abb8f7c18fbace1"
@@ -1331,11 +1326,6 @@ safe-buffer@^5.0.1, safe-buffer@^5.1.2:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-sax@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
-  integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
-
 "semver@2 || 3 || 4 || 5", semver@^5.5.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.0.tgz#790a7cf6fea5459bac96110b29b60412dc8ff96b"
@@ -1400,13 +1390,6 @@ socket.io-parser@~3.3.0:
     component-emitter "1.2.1"
     debug "~3.1.0"
     isarray "2.0.1"
-
-"sonos-discovery@https://github.com/jishi/node-sonos-discovery":
-  version "1.7.3"
-  resolved "https://github.com/jishi/node-sonos-discovery#de6771b0ec8713ea8028560456cda593c8283372"
-  dependencies:
-    html-entities "1.0.x"
-    xml-flow "1.0.2"
 
 spdx-correct@^3.0.0:
   version "3.1.0"
@@ -1630,13 +1613,6 @@ ws@~6.1.0:
   integrity sha512-eqZfL+NE/YQc1/ZynhojeV8q+H050oR8AZ2uIev7RU10svA9ZnJUddHcOUZTJLinZ9yEfdA2kSATS2qZK5fhJA==
   dependencies:
     async-limiter "~1.0.0"
-
-xml-flow@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/xml-flow/-/xml-flow-1.0.2.tgz#401ef11943fe816420811d46d31f359a60925516"
-  integrity sha512-TfV52Su2083n8w61l1hGI5K3ZAkn4hmaon3oJHc+TRQo0QkKLMPAPdMpGMJd+5Aik6ZUicPDjBINO8QxLkZGgg==
-  dependencies:
-    sax "^1.2.4"
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"

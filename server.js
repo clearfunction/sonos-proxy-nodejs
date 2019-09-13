@@ -1,7 +1,5 @@
-const SonosSystem = require('sonos-discovery');
 const socketio = require('socket.io-client');
 
-const discovery = new SonosSystem();
 const request = require('request');
 const settings = require('./settings');
 
@@ -25,11 +23,11 @@ function sayClip(roomName, data) {
 }
 
 function enumeratePlayers(callback) {
-  for (let index = 0; index < discovery.players.length; index += 1) {
-    const player = discovery.players[index];
+  const roomName = 'CF Front';
+  callback(roomName);
 
-    callback(player.roomName);
-  }
+  // TODO: at some point if we get another Sonos in here, we can add the
+  // enumerate rooms method back...
 }
 
 const registerListener = () => {

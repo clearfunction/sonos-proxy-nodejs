@@ -1,4 +1,4 @@
 module.exports = {
-  clearbotUrl: 'http://40.122.147.88/',
+  clearbotUrl: 'https://clearbot-dev.azurewebsites.net/',
   sonosBridgeHost: 'http://localhost:5005',
 };

@@ -9,8 +9,7 @@
   "main": "server.js",
   "dependencies": {
     "request": "^2.88.0",
-    "socket.io-client": "^2.2.0",
-    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery"
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
     "eslint": "^6.1.0",
