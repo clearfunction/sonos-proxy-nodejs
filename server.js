@@ -33,7 +33,7 @@ function enumeratePlayers(callback) {
 const registerListener = () => {
   const serviceUrl = settings.clearbotUrl;
 
-  const socket = socketio(serviceUrl);
+  const socket = socketio.connect(serviceUrl);
 
   socket.on('connect', () => {
     console.log(`Connected to server: ${serviceUrl}`);
