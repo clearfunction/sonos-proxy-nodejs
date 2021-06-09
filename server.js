@@ -23,7 +23,7 @@ function sayClip(roomName, data) {
 }
 
 function enumeratePlayers(callback) {
-  const roomName = 'CF Front';
+  const roomName = 'Back Office';
   callback(roomName);
 
   // TODO: at some point if we get another Sonos in here, we can add the
