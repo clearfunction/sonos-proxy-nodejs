@@ -1,28 +1,55 @@
-const socketio = require('socket.io-client');
+import 'dotenv/config';
 
-const request = require('request');
-const settings = require('./settings');
+import { io, Socket } from 'socket.io-client';
+import player from 'play-sound';
+import request from 'request';
+
+type PlayUrl = {
+  url: string;
+};
+
+type PlayText = {
+  text: string;
+  volume: number;
+};
+
+type PlayClip = {
+  file: string;
+  volume: number;
+};
+
+interface ServerToClientEvents {
+  play_url: (data: PlayUrl) => void;
+  play_text: (data: PlayText) => void;
+  close: () => void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ClientToServerEvents {}
 
 // connect to socket for bot commands
 // the basic idea is that we just proxy commands to the referenced HTTP API
 
-function urlForRoom(roomName) {
-  return `${settings.sonosBridgeHost}/${encodeURIComponent(roomName)}`;
+function urlForRoom(roomName: string): string {
+  return `${process.env.SONOS_BRIDGE_URL}/${encodeURIComponent(roomName)}`;
 }
 
-function playClip(roomName, data) {
+function playClip(roomName: string, data: PlayClip): void {
   const file = encodeURIComponent(data.file);
   const volume = encodeURIComponent(data.volume);
-  request(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
+
+  player().play(`static/clips/${data.file}`);
+
+  // request(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
 }
 
-function sayClip(roomName, data) {
+function sayClip(roomName: string, data: PlayText): void {
   const text = encodeURIComponent(data.text);
   const volume = encodeURIComponent(data.volume);
   request(`${urlForRoom(roomName)}/say/${text}/${volume}`);
 }
 
-function enumeratePlayers(callback) {
+function enumeratePlayers(callback: (roomName: string) => void): void {
   const roomName = 'Back Office';
   callback(roomName);
 
@@ -30,10 +57,15 @@ function enumeratePlayers(callback) {
   // enumerate rooms method back...
 }
 
-const registerListener = () => {
-  const serviceUrl = settings.clearbotUrl;
+function registerListener(): void {
+  const serviceUrl = process.env.CLEARBOT_URL;
 
-  const socket = socketio.connect(serviceUrl);
+  if (!serviceUrl) throw new Error('CLEARBOT_URL was not defined.');
+
+  console.log('Connecting to', serviceUrl);
+
+  const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
+    io(serviceUrl);
 
   socket.on('connect', () => {
     console.log(`Connected to server: ${serviceUrl}`);
@@ -66,6 +98,6 @@ const registerListener = () => {
     console.log("I don't know how to reconnect yet.  Please help!");
     process.exit(1);
   });
-};
+}
 
 registerListener();
