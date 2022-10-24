@@ -38,9 +38,11 @@ function playClip(roomName: string, data: PlayClip): void {
   const file = encodeURIComponent(data.file);
   const volume = encodeURIComponent(data.volume);
 
-  player().play(`static/clips/${data.file}`);
-
-  // request(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
+  if (process.env.USE_LOCAL_SOUNDS === 'true') {
+    player().play(`static/clips/${data.file}`);
+  } else {
+    request(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
+  }
 }
 
 function sayClip(roomName: string, data: PlayText): void {
