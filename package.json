@@ -4,6 +4,7 @@
   "description": "A socket client for https://github.com/clearfunction/clearbot Sonos integration",
   "author": "David Mohundro <david@clearfunction.com>",
   "main": "server.js",
+  "license": "MIT",
   "dependencies": {
     "dotenv": "^16.0.3",
     "play-sound": "^1.1.5",
