@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import { io, Socket } from 'socket.io-client';
+import { spawn } from 'node:child_process';
 import player from 'play-sound';
 import request from 'request';
 
@@ -45,10 +46,24 @@ function playClip(roomName: string, data: PlayClip): void {
   }
 }
 
+function localSay(text: string): void {
+  if (process.platform === 'darwin') {
+    spawn('say', [text]);
+  } else {
+    // NOTE: simple Windows support could be done with https://github.com/p-groarke/wsay or similar
+    console.warn('localSay is not supported on this platform.');
+  }
+}
+
 function sayClip(roomName: string, data: PlayText): void {
   const text = encodeURIComponent(data.text);
   const volume = encodeURIComponent(data.volume);
-  request(`${urlForRoom(roomName)}/say/${text}/${volume}`);
+
+  if (process.env.USE_LOCAL_SOUNDS === 'true') {
+    localSay(text);
+  } else {
+    request(`${urlForRoom(roomName)}/say/${text}/${volume}`);
+  }
 }
 
 function enumeratePlayers(callback: (roomName: string) => void): void {
