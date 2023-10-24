@@ -15,7 +15,7 @@ sequenceDiagram
 
 ## Requirements
 
-- Yarn
+- NPM
 - Node
 
 ## Running Locally
@@ -26,7 +26,7 @@ sequenceDiagram
 - If you don't have a Sonos speaker, then you can still use the local player... just ensure you've got `USE_LOCAL_SOUNDS` set to `true`
 - If you _do_ have a Sonos speaker, then you'll also need the `node-sonos-http-api` running locally
 - Ensure your `clearbot` is running. It has its own documentation.
-- Run `yarn dev`
+- Run `npm run dev`
 - Wait for the `Connected to http://...` message. It finds the speaker prior to starting socket connection to the bot.
 - Enjoy!
 
@@ -38,8 +38,8 @@ to daemonize it on the Mac Mini in our closet. Let's see how it works out for
 us!
 
 ```sh
-yarn                   # installs this app
-yarn global add pm2    # installs the daemonizer
+npm install            # installs this app
+npm install pm2 -g     # installs the daemonizer
 pm2 start ./server.js --name sonos_proxy  # assumes you're in this app's folder, starts the daemon
 pm2 save               # saves the running process as a daemon that will be auto-restarted even after reboots
 ```
