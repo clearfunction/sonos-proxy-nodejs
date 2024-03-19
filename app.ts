@@ -3,7 +3,6 @@ import 'dotenv/config';
 import { io, Socket } from 'socket.io-client';
 import { spawn } from 'node:child_process';
 import player from 'play-sound';
-import request from 'request';
 
 type PlayUrl = {
   url: string;
@@ -42,7 +41,7 @@ function playClip(roomName: string, data: PlayClip): void {
   if (process.env.USE_LOCAL_SOUNDS === 'true') {
     player().play(`static/clips/${data.file}`);
   } else {
-    request(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
+    fetch(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
   }
 }
 
@@ -62,7 +61,7 @@ function sayClip(roomName: string, data: PlayText): void {
   if (process.env.USE_LOCAL_SOUNDS === 'true') {
     localSay(text);
   } else {
-    request(`${urlForRoom(roomName)}/say/${text}/${volume}`);
+    fetch(`${urlForRoom(roomName)}/say/${text}/${volume}`);
   }
 }
 
