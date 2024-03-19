@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "A socket client for https://github.com/clearfunction/clearbot Sonos integration",
   "author": "David Mohundro <david@clearfunction.com>",
-  "main": "server.js",
+  "main": "build/app.js",
   "license": "MIT",
   "scripts": {
     "lint": "eslint '**/*.ts'",

@@ -16,3 +16,4 @@ obj/
 *.swp
 .env
 .DS_Store
+build/
