@@ -18,13 +18,13 @@ type PlayClip = {
   volume: number;
 };
 
-interface ServerToClientEvents {
+type ServerToClientEvents = {
   play_url: (data: PlayUrl) => void;
   play_text: (data: PlayText) => void;
   close: () => void;
-}
+};
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ClientToServerEvents {}
 
 // connect to socket for bot commands
