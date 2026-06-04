@@ -1,31 +1,18 @@
 import 'dotenv/config';
 
-import { io, Socket } from 'socket.io-client';
 import { spawn } from 'node:child_process';
 import player from 'play-sound';
-
-type PlayUrl = {
-  url: string;
-};
-
-type PlayText = {
-  text: string;
-  volume: number;
-};
+import { handleMessage } from './messages';
+import { nextBackoffMs } from './backoff';
 
 type PlayClip = {
   file: string;
   volume: number;
 };
 
-type ServerToClientEvents = {
-  play_url: (data: PlayUrl) => void;
-  play_text: (data: PlayText) => void;
-  close: () => void;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface ClientToServerEvents {}
+process.on('unhandledRejection', reason => {
+  console.warn('Unhandled promise rejection:', reason);
+});
 
 // connect to socket for bot commands
 // the basic idea is that we just proxy commands to the referenced HTTP API
@@ -41,7 +28,9 @@ function playClip(roomName: string, data: PlayClip): void {
   if (process.env.USE_LOCAL_SOUNDS === 'true') {
     player().play(`static/clips/${data.file}`);
   } else {
-    fetch(`${urlForRoom(roomName)}/clip/${file}/${volume}`);
+    fetch(`${urlForRoom(roomName)}/clip/${file}/${volume}`).catch(err =>
+      console.warn('Sonos bridge request failed:', err)
+    );
   }
 }
 
@@ -54,14 +43,19 @@ function localSay(text: string): void {
   }
 }
 
-function sayClip(roomName: string, data: PlayText): void {
+function sayClip(
+  roomName: string,
+  data: { text: string; volume: number }
+): void {
   const text = encodeURIComponent(data.text);
   const volume = encodeURIComponent(data.volume);
 
   if (process.env.USE_LOCAL_SOUNDS === 'true') {
     localSay(text);
   } else {
-    fetch(`${urlForRoom(roomName)}/say/${text}/${volume}`);
+    fetch(`${urlForRoom(roomName)}/say/${text}/${volume}`).catch(err =>
+      console.warn('Sonos bridge request failed:', err)
+    );
   }
 }
 
@@ -73,47 +67,61 @@ function enumeratePlayers(callback: (roomName: string) => void): void {
   // enumerate rooms method back...
 }
 
-function registerListener(): void {
+function connect(): void {
   const serviceUrl = process.env.CLEARBOT_URL;
-
+  const token = process.env.RELAY_TOKEN;
   if (!serviceUrl) throw new Error('CLEARBOT_URL was not defined.');
+  if (!token) throw new Error('RELAY_TOKEN was not defined.');
 
-  console.log('Connecting to', serviceUrl);
+  let attempt = 0;
 
-  const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
-    io(serviceUrl);
+  const open = () => {
+    console.log('Connecting to', serviceUrl);
+    // token rides as the WebSocket subprotocol (Sec-WebSocket-Protocol)
+    const ws = new WebSocket(serviceUrl, token);
 
-  socket.on('connect', () => {
-    console.log(`Connected to server: ${serviceUrl}`);
-  });
+    ws.addEventListener('open', () => {
+      attempt = 0;
+      console.log(`Connected to server: ${serviceUrl}`);
+    });
 
-  socket.on('play_url', data => {
-    console.log('Received play_url: ', data);
-
-    enumeratePlayers(roomName => {
-      // HACK: switch to new format for now...
-      const { url } = data;
-
-      playClip(roomName, {
-        file: url,
-        volume: 20,
+    ws.addEventListener('message', event => {
+      handleMessage(String(event.data), {
+        onPlayUrl: data => {
+          console.log('Received play_url: ', data);
+          // HACK: switch to new format for now...
+          enumeratePlayers(roomName =>
+            playClip(roomName, { file: data.url, volume: 20 })
+          );
+        },
+        onPlayText: data => {
+          console.log('Received say: ', data);
+          enumeratePlayers(roomName => sayClip(roomName, data));
+        },
+        onClose: () => console.log('Server asked us to close; will reconnect.'),
       });
     });
-  });
 
-  socket.on('play_text', data => {
-    console.log('Received say: ', data);
-
-    enumeratePlayers(roomName => {
-      sayClip(roomName, data);
+    // A 1006 close right after connecting usually means a rejected token, not a down server.
+    ws.addEventListener('close', event => {
+      const delay = nextBackoffMs(attempt++);
+      console.log(
+        `Disconnected (code ${event.code}${event.reason ? `: ${event.reason}` : ''}); reconnecting in ${Math.round(delay / 1000)}s`
+      );
+      setTimeout(open, delay);
     });
-  });
+    ws.addEventListener('error', () => {
+      // 'close' fires after 'error'; avoid double-scheduling
+      console.warn('WebSocket error; closing to trigger reconnect');
+      try {
+        ws.close();
+      } catch {
+        /* noop */
+      }
+    });
+  };
 
-  socket.on('close', () => {
-    console.log(`Lost contact with server: ${serviceUrl}`);
-    console.log("I don't know how to reconnect yet.  Please help!");
-    process.exit(1);
-  });
+  open();
 }
 
-registerListener();
+connect();
