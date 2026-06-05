@@ -59,12 +59,14 @@ function sayClip(
   }
 }
 
-function enumeratePlayers(callback: (roomName: string) => void): void {
-  const roomName = 'Back Office';
-  callback(roomName);
+// Rooms to play on, from SONOS_ROOMS (comma-separated for multiple speakers).
+const rooms = (process.env.SONOS_ROOMS ?? 'Back Office')
+  .split(',')
+  .map(room => room.trim())
+  .filter(Boolean);
 
-  // TODO: at some point if we get another Sonos in here, we can add the
-  // enumerate rooms method back...
+function enumeratePlayers(callback: (roomName: string) => void): void {
+  rooms.forEach(callback);
 }
 
 function connect(): void {

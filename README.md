@@ -33,6 +33,7 @@ sequenceDiagram
   - `CLEARBOT_URL` — the bot's WebSocket URL (`ws://localhost:3000` locally, `wss://…` in production)
   - `RELAY_TOKEN` — must match the value set on `clearbot`
   - `SONOS_BRIDGE_URL` — base URL of `node-sonos-http-api` (e.g. `http://localhost:5005`)
+  - `SONOS_ROOMS` — the speaker room name(s); comma-separated to play on multiple (e.g. `Living Room,Kitchen`)
 - If you don't have a Sonos speaker, then you can still use the local player... just ensure you've got `USE_LOCAL_SOUNDS` set to `true`
 - If you _do_ have a Sonos speaker, then you'll also need the `node-sonos-http-api` running locally
 - Ensure your `clearbot` is running. It has its own documentation.
